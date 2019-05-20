@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Alma Print Slip Boomarklet Generator</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <style>
+    body { font-family: courier, courier new, serif; }
+    label { font-weight: bold; }
+    legend { border: 1px solid;}
+    .column { float: left; width: 50%; }
+    .row:after { content: ""; display: table; clear: both; }
+      #sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+      #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-weight:bold;}
+      #sortable li span { position: absolute; margin-left: -1.3em; }
+      #code_hidden { display:none; }
+      #cookie { display:none; }
+      #footer { background-color: silver; font-weight: bold;}
+      #cmd { font-size:large; }
+      #bkm { border: 3px solid red; padding: 10px;}
+      a#bkl  { font-size: large; font-weight: bold; color: white; background-color: red; border: 3px solid black; padding: 5px;}
+     </style>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script>
+        $( function() {
+        $( "#sortable" ).sortable();
+        $( "#sortable" ).disableSelection();
+        var p_obj = new Object();  
+        var p_json = Cookies.get('p_obj');
+        if (!p_json) {
+            // Default values
+            p_obj["%bk_name%"] = "AlmaPrintSlip";
+            p_obj["%popup_top%"] = 300;
+            p_obj["%popup_left%"] = 500;
+            p_obj["%popup_width%"] = 500;
+            p_obj["%popup_height%"] = 600;
+            p_obj["%print_now%'"] = "_sp.print(); _sp.close();";
+            p_obj["%slip_title%"]= "Loan receipt";
+            p_obj["%institution_name%"]= "[MyInstitution]";
+            p_obj["%institution_logo_url%"]= "https://knowledge.exlibrisgroup.com/@api/deki/files/55131/Alma_horizontal.jpg?revision=1";
+            p_obj["%body_css%"]= "font-family: Arial, Helvetica, sans-serif;";
+            p_obj["%table_css%"]= "border:1px solid black; border-collapse: collapse;";
+            p_obj["%institution_logo_css%"]= "width:100px;";
+            p_obj["%institution_css%"]= "font-size: medium;";
+            p_obj["%library_css%"]= "font-size: medium;";
+            p_obj["%title_css%"]= "padding-top:10px; font-size: large;";
+            p_obj["%user_css%"]= "font-size: small; font-weight:bold;";
+            p_obj["%loans_css%"]= "padding-top: 20px;";
+            p_obj["%signature_css%"]= "padding-top:50px;";
+            p_obj["%date_format%"]= "en-US";
+            p_obj["%signature%"]= "Signature ______________________";
+            p_obj["%date_text%"]= "Date";
+            p_obj["%print_now%"]= "_sp.print(); _sp.close();";
+            // end of default values
+                } else {
+                $('#cookie').css("display", "inline");
+                p_obj = JSON.parse(p_json);  
+                $('#sortable').html(p_obj["%list_order%"]);     
+                }
+            $('#bk_name').val(p_obj["%bk_name%"]);
+            $('#popup_y').val(p_obj["%popup_top%"]);
+            $('#popup_x').val(p_obj["%popup_left%"]);
+            $('#popup_width').val(p_obj["%popup_width%"]);
+            $('#popup_height').val(p_obj["%popup_height%"]);            
+            $('#slip_name').val(p_obj["%slip_title%"]);
+            $('#institution_name').val(p_obj["%institution_name%"]);
+            $('#institution_logo_url').val(p_obj["%institution_logo_url%"]);
+            $('#body_css').val(p_obj["%body_css%"]);
+            $('#table_css').val(p_obj["%table_css%"]);
+            $('#institution_logo_css').val(p_obj["%institution_logo_css%"]);
+            $('#institution_css').val(p_obj["%institution_css%"]);
+            $('#library_css').val(p_obj["%library_css%"]);
+            $('#title_css').val(p_obj["%title_css%"]);
+            $('#user_css').val(p_obj["%user_css%"]);
+            $('#loans_css').val(p_obj["%loans_css%"]);
+            $('#signature_css').val(p_obj["%signature_css%"]);
+            $('#date_format').val(p_obj["%date_format%"]);
+            $('#signature').val(p_obj["%signature%"]);
+            $('#date_text').val(p_obj["%date_text%"]);
+            if (p_obj["%print_now%"] == "_sp.print(); _sp.close();") $('#print_now').prop('checked', true);
+        
+        } );
+        
+        function get_order_slip() {
+            var slipArray = [];
+            $( "li" ).each(function() {
+            slipArray.push(this.id);
+            } );
+            return slipArray;
+            }
+        
+        function reorder_slip(_ilu, _isn, _lb, _sln, _un, _ud, _llt, _ds, _sn) {
+            var _hsl = "";
+            var r_array = get_order_slip();
+            var div_slip_obj =  {
+                institution_logo:"<div id='slip_logo'><img src='"+_ilu+"'/></div>",
+                institution_name:"<div id='slip_institution'>"+_isn+"</div>",
+                library_name:"<div id='slip_lb'>"+_lb+"</div>",
+                slip_title:"<div id='slip_title'>"+_sln+"</div>",
+                user_name:"<div id='slip_user'>"+_un+" ("+_ud+")</div>",
+                loans_list:"<div id='slip_loans_table'>"+_llt+"</div>",
+                signature:"<div id='slip_sn'>"+_ds+" "+_sn+"</div>"
+                };     
+         
+           if (_lb=="") {
+                    div_slip_obj['library_name'] = "<div id='slip_lb'>\"+_lb+\"</div>";
+                    div_slip_obj['user_name'] = "<div id='slip_user'>\"+_un+\" (\"+_ud+\")</div>";
+                    div_slip_obj['loans_list'] = "<div id='slip_loans_table'>\"+_llt+\"</div>";
+                    div_slip_obj['signature'] = "<div id='slip_sn'>\"+_ds+\" "+_sn+"</div>"
+                }
+           $.each(r_array, function(key, value) {
+                _hsl += div_slip_obj[value];        
+           }, div_slip_obj);
+        
+           _hsl += "</div>";
+           return _hsl;
+           }
+        
+        
+        function get_parameters() {
+           var p_obj = new Object();      
+            p_obj["%bk_name%"]= $('#bk_name').val();
+            p_obj["%popup_top%"]= $('#popup_y').val();
+            p_obj["%popup_left%"]= $('#popup_x').val();
+            p_obj["%popup_width%"]= $('#popup_width').val();
+            p_obj["%popup_height%"]= $('#popup_height').val();  
+            p_obj["%slip_title%"]= $('#slip_name').val();
+            p_obj["%institution_name%"]= $('#institution_name').val();
+            p_obj["%institution_logo_url%"]= $('#institution_logo_url').val();
+            p_obj["%body_css%"]= $('#body_css').val();
+            p_obj["%table_css%"]= $('#table_css').val();
+            p_obj["%institution_logo_css%"]= $('#institution_logo_css').val();
+            p_obj["%institution_css%"]= $('#institution_css').val();
+            p_obj["%library_css%"]= $('#library_css').val();
+            p_obj["%title_css%"]= $('#title_css').val();
+            p_obj["%user_css%"]= $('#user_css').val();
+            p_obj["%loans_css%"]= $('#loans_css').val();
+            p_obj["%signature_css%"]= $('#signature_css').val();
+            p_obj["%date_format%"]= $('#date_format').val();
+            p_obj["%signature%"]= $('#signature').val();
+            p_obj["%date_text%"]= $('#date_text').val();
+            p_obj["%html_slip%"]=reorder_slip(p_obj['%institution_logo_url%'], p_obj['%institution_name%'], '', p_obj['%slip_title%'], '', '', '', p_obj['%date_text%'], p_obj['%signature%']);
+            p_obj["%list_order%"]=$('#sortable').html();
+            p_obj["%print_now%"]=" ";
+            if ($('#print_now').prop("checked") == true) p_obj["%print_now%"]="_sp.print(); _sp.close();";
+         return p_obj;          
+        }
+        
+     function minify(code) {
+            code = code.split(/\r\n|\r|\n/g);
+            var i = 0;
+            var len = code.length;
+            var noSemiColon = {};
+            var t;
+            $.each("} { ; ,".split(" "), function(i, x) {
+                noSemiColon[x] = 1;
+                });
+            for (; i < len; i++) {
+                t = $.trim(code[i]);
+                code[i] = t;
+            }
+        return code.join("").replace(/;$/, "");
+    }
+
+        function conf_code() {
+            var slip_data_obj = get_parameters(); 
+            save_parameters();
+            var bk_name = $("#bk_name").val();
+            var s_code = $("#source_code").val();
+            s_code = s_code.replace(/%\w+%/g, function(all) {
+                return slip_data_obj[all] || all;
+                });
+
+            s_code = minify(s_code);
+            s_code="(function(){"+s_code+"})()";
+            s_code = "javascript:"+encodeURIComponent(s_code);
+            
+         
+            var bookmarklet = "<p id='bkm'>Bookmarklet created.<br />Drag and drop this link to your bookmark toolbar: ";
+            bookmarklet +='<a id="bkl" href="'+s_code+'">'+bk_name+'</a></br/></br><button type="button" onclick="window.location.reload(true);">Go back</button></p>';
+                        
+            var result_cmd = bookmarklet;
+            $('#result').html(result_cmd);
+        }
+        
+       function preview_slip() {       
+        var p_obj = get_parameters();        
+        save_parameters();
+      
+        var d = new Date();
+        var _df = p_obj["%date_format%"];
+        var _td = d.toLocaleDateString(_df);
+        var _ds = p_obj["%date_text%"]  + " "+_td;
+        var loan_date="2019-01-01";
+        var due_date="2019-02-01";
+        var _lb = "[library name is get from Alma current location]";
+        
+        var _css = "body {"+p_obj["%body_css%"]+"} table, th, td {"+p_obj["%table_css%"]+"} #slip_institution {"+p_obj["%institution_css%"]+"} #slip_logo img {"+p_obj["%institution_logo_css%"]+"} #slip_lb {"+p_obj["%library_css%"]+"} #slip_title {"+p_obj["%title_css%"]+"} #slip_user {"+p_obj["%user_css%"]+"} #slip_loans_table {"+p_obj["%loans_css%"]+"} #slip_sn {"+p_obj["%signature_css%"]+"}";
+        var _hh ="<!DOCTYPE HTML><html><head><meta charset='UTF-8'><style>"+_css+"</style></head><body><div id='slip'>";     
+        var _un ="John Smith";
+        var _ud = "123456";
+        var _llt = "<table><tr><th>Barcode</th><th>Title</th><th>Loan Date</th><th>Due Date</th><th>Call Number</th></tr>";
+        _llt += "<tr><td>N1234</td><td>Hamlet / William Shakespeare</td><td>"+loan_date+"</td><td>"+due_date+"</td><td>822.33 HAM</td></tr></table>";
+                        
+        var _hsl = reorder_slip(p_obj['%institution_logo_url%'], p_obj['%institution_name%'], _lb, p_obj['%slip_title%'], _un, _ud, _llt, _ds, p_obj['%signature%']);
+       
+        var _sp = window.open('', '_blank','toolbar=no,resizable=yes,titlebar=no,menubar=no,top='+p_obj["%popup_top%"]+',left='+p_obj["%popup_left%"]+',width='+p_obj["%popup_width%"]+',height='+p_obj["%popup_height%"]); 
+        _sp.document.write(_hh+_hsl+'</body></html>'); 
+        _sp.document.close();      
+        window.location.reload(true);
+       }
+       
+       function save_parameters() {
+         var p_obj = get_parameters();
+         Cookies.set("p_obj", JSON.stringify(p_obj), { expires: 365 });              
+        }
+       
+       function restore_defaults() {
+        //alert ("Rimuovo");
+        Cookies.remove('p_obj');
+        window.location.reload(true);       
+        }
+    </script>
+  </head>
+  <body>
+  <div class="row">
+    <div class="column">
+     <h1>Alma print slip Bookmarklet generator</h1>
+    <fieldset><legend><strong>General</strong></legend>
+        <p><label>Bookmarklet name: </label><input type="text" id="bk_name" required> <label>Print immediately </label><input type="checkbox" id="print_now"></p>
+        <p><label>Slip popup (in px): </label><label>Width: </label><input type="text" id="popup_width" size=10> <label>Height:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label><input type="text" id="popup_height" size=10>
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>Position top: </label><input type="text" id="popup_x" size=10> <label>Position left: </label><input type="text" id="popup_y" size=10><br />Note: in Chrome the position is fixed.</p>
+        
+        </fieldset>
+         <p>&nbsp;</p>
+        <fieldset><legend><strong>Receipt appearance (CSS)</strong></legend>
+        <p><label>General (body): </label><input type="text" id="body_css" size=80></p>
+        <p><label>Institution logo: </label><input type="text" id="institution_logo_css" size=80></p>
+        <p><label>Institution: </label><input type="text" id="institution_css" size=80></p>
+        <p><label>Library: </label><input type="text" id="library_css" size=80></p>
+        <p><label>Slip title: </label><input type="text" id="title_css" size=80></p>
+        <p><label>Patron: </label><input type="text" id="user_css" size=80></p>
+        <p><label>Loans table: </label><input type="text" id="table_css" size=80></p>
+        <p><label>Loans list: </label><input type="text" id="loans_css" size=80></p>
+        <p><label>Signature: </label><input type="text" id="signature_css" size=80></p>
+        </fieldset>
+        </div>
+    <div class="column">
+    <p>&nbsp;</p>
+    <div id="result"><button type="button" onclick="conf_code();">Create the Boomarklet</button> | <button type="button" onclick="preview_slip();">Preview</button><span id="cookie"> | &#x2714; Parameters Saved: <button type="button" onclick="restore_defaults();">Restore defaults values</button></span></div>
+    <p>&nbsp;</p>
+    <fieldset><legend><strong>Receipt Labels</strong></legend>
+        <p><label>Slip title: </label><input type="text" id="slip_name"></p>
+        <p><label>Institution logo url: </label><input type="text" id="institution_logo_url" size=100></p>
+        <p><label>Institution name: </label><input type="text" id="institution_name"></p>
+        <p><label>Signature text: </label><input type="text" id="signature" size=70></p>
+        <p><label>Date text: </label><input type="text" id="date_text"> <label>Date localization (IETF BCP 47): </label><input type="text" id="date_format" size=10></p>
+        </fieldset>
+          <p>&nbsp;</p>
+    <fieldset><legend><strong>Receipt elements order</strong></legend>
+    <p>Drag and drop to reorder the elements:</p>
+        <ul id="sortable">
+        <li class="ui-state-default" id="institution_logo"><span class="ui-icon ui-icon-arrowthick-2-n-s">&#8616;</span>Institution logo</li>
+        <li class="ui-state-default" id="institution_name"><span class="ui-icon ui-icon-arrowthick-2-n-s">&#8616;</span>Institution name</li>         
+        <li class="ui-state-default" id="library_name"><span class="ui-icon ui-icon-arrowthick-2-n-s">&#8616;</span>Library name</li>
+        <li class="ui-state-default" id="slip_title"><span class="ui-icon ui-icon-arrowthick-2-n-s">&#8616;</span>Slip title</li>      
+        <li class="ui-state-default" id="user_name"><span class="ui-icon ui-icon-arrowthick-2-n-s">&#8616;</span>Patron name, id</li>
+        <li class="ui-state-default" id="loans_list"><span class="ui-icon ui-icon-arrowthick-2-n-s">&#8616;</span>Loan List</li>
+        <li class="ui-state-default" id="signature"><span class="ui-icon ui-icon-arrowthick-2-n-s">&#8616;</span>Signature</li>
+        </ul>
+        </fieldset>
+        </div>
+       </div>
+    <div id="code_hidden">
+    <textarea id="source_code">
+    var _lt = document.getElementById("TABLE_DATA_loanList");
+    if (_lt) {
+        var _sln = "%slip_title%",
+        _isn = "%institution_name%",
+        _ilu = "%institution_logo_url%",
+        _bcs = "%body_css%",
+        _tbcs = "%table_css%",
+        _gcs = "%institution_logo_css%";
+        _ics = "%institution_css%",
+        _lbcs = "%library_css%",
+        _tcs = "%title_css%",
+        _ucs = "%user_css%",
+        _lcs = "%loans_css%",
+        _scs = "%signature_css%",
+        _df = "%date_format%",
+        _sn = "%signature%",
+        _ll = "";
+        var d = new Date();
+        var _td = d.toLocaleDateString(_df);
+        var _ds = "%date_text% "+_td;
+        var _un = document.getElementById("pageBeanfullPatronName").innerHTML;    
+        var _ud = document.getElementById("pageBeanuserIDisplay").value;    
+        var _lb = document.getElementById("locationText").innerHTML;    
+        var _rl = _lt.rows.length;
+        for (var i = 0; i < _rl; i++) {
+            var _lc = _lt.rows.item(i).cells;
+            var _cl = _lc.length;
+            for (var j = 1; j < _cl; j++) {
+                if (i == 0) {     
+                var _ltx = _lc.item(j);
+                var _hd = _ltx.getElementsByClassName("sort fontReg");
+                if (_hd.length > 0) {
+                    var _ltx = _hd[0].value;
+                    } else {
+                    var _ltx =  _lc.item(j).innerText;            
+                    }
+                } else {
+                    var _ltx = _lc.item(j).innerText;
+                    }
+                if (_ltx.length > 0) {
+                    _ll += "|" + _ltx + "|";
+                }                    
+                }
+            _ll += "\n";
+            }
+        var _llt = _ll.replace(/\|\|/g, "</td><td>");
+        _llt = _llt.replace(/\|\n/g, "</td></tr>");
+        _llt = _llt.replace(/\|/g, "<tr><td>");
+        _llt = _llt.replace(/CET/g, "");
+        _llt = _llt.replace(/\n/g, "");
+        _llt = "<table>" + _llt + "</table>";
+        var _css = "body {"+_bcs+"} table, th, td {"+_tbcs+"} #slip_institution {"+_ics+"} #slip_logo img {"+_gcs+"} #slip_lb {"+_lbcs+"} #slip_title {"+_tcs+"} #slip_user {"+_ucs+"} #slip_loans_table {"+_tcs+"} #slip_sn {"+_scs+"}";
+        var _hh ="<!DOCTYPE HTML><html><head><meta charset='UTF-8'><style>"+_css+"</style></head><body><div id='slip'>";         
+        var _hsl = "%html_slip%";
+        var _sp = window.open('', '_blank','toolbar=no,resizable=yes,titlebar=no,menubar=no,top=%popup_top%,left=%popup_left%,width=%popup_width%,height=%popup_height%'); 
+        _sp.document.write(_hh+_hsl+'</body></html>'); 
+        _sp.document.close();
+        %print_now%        
+     }
+</textarea>
+ </div>
+    <div id="footer">
+    <p>2019 - Nazzareno Bedini - Universit&agrave; di Pisa</p>
+  </div>
+ </body>
+</html> 
