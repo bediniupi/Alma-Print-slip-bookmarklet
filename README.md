@@ -15,7 +15,7 @@ Drag and drop it in your browser bookmark toolbar (or other bookmark menu if you
 
 ## Configuration
 
-Generating the bookmarklet you can personalize the button and the slip appearance (css and text) and behaviour (display or display and print the receipt immediately): the data are saved locally in a permanent (1 year) cookie when you press "Preview" or "Create the bookmarklet".
+Generating the bookmarklet you can customize the button, the slip appearance (css and text) and behaviour (display or display and print the receipt immediately): the data are saved locally in a permanent (1 year) cookie when you press "Preview" or "Create the bookmarklet".
 
 ## Tips and tricks
 
