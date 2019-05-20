@@ -1,6 +1,6 @@
 # Alma-print-slip bookmarklet
 
-Alma-Print Slip bookmarklet
+Alma-Print Slip bookmarklet generator
 
 ## What it does
 
