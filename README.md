@@ -19,6 +19,8 @@ Generating the bookmarklet you can personalize the button and the slip appearanc
 
 ## Tips and tricks
 
+You can create as many bookmarklets as you want with different name: for example one complete with all data and another simplified, without signature part, logo etc. 
+
 If you do not want to display some data (for example, the signature part) simply add a display:none; to the relative css textbox of the element to delete.
 
 Remember that the data displayed in loans table are the same and in the same order of the datas displayed in the table you visualize in the fulfillment Patron services Alma page.
