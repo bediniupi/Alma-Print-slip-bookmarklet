@@ -4,7 +4,7 @@ Alma-Print Slip bookmarklet generator
 
 ## What it does
 
-Create a bookmarklet that you can save in your browser bookmark toolbar: when you display in the Alma fulfillment Patron services page the user loans are made and/or displayed just click on the bookmark a loan slip/receipt immediately is displayed and print bypassing the Alma email based circulation desks printers.
+Create a bookmarklet that you can save in your browser bookmark toolbar: when you display the user loans in the Alma fulfillment Patron services page just click on the bookmark and a loan slip/receipt immediately is displayed and print bypassing the Alma email based circulation desks printers.
 
 ## Installation
 Generate the bookmarklet here: 
