@@ -54,6 +54,7 @@
             p_obj["%signature%"]= "Signature ______________________";
             p_obj["%date_text%"]= "Date";
             p_obj["%print_now%"]= "_sp.print(); _sp.close();";
+            p_obj["%no_auth%"] = " ";
             // end of default values
                 } else {
                 $('#cookie').css("display", "inline");
@@ -81,7 +82,7 @@
             $('#signature').val(p_obj["%signature%"]);
             $('#date_text').val(p_obj["%date_text%"]);
             if (p_obj["%print_now%"] == "_sp.print(); _sp.close();") $('#print_now').prop('checked', true);
-        
+            if (p_obj["%no_auth%"] == 'var _na = _ltx.split(" / "); _ltx = _na[0];') $('#no_auth').prop('checked', true);
         } );
         
         function get_order_slip() {
@@ -146,6 +147,8 @@
             p_obj["%list_order%"]=$('#sortable').html();
             p_obj["%print_now%"]=" ";
             if ($('#print_now').prop("checked") == true) p_obj["%print_now%"]="_sp.print(); _sp.close();";
+            p_obj["%no_auth%"]=" ";
+            if ($('#no_auth').prop("checked") == true) p_obj["%no_auth%"]='var _na = _ltx.split(" / "); _ltx = _na[0];';
          return p_obj;          
         }
         
@@ -202,8 +205,10 @@
         var _hh ="<!DOCTYPE HTML><html><head><meta charset='UTF-8'><style>"+_css+"</style></head><body><div id='slip'>";     
         var _un ="John Smith";
         var _ud = "123456";
+        var _ti = "Hamlet / William Shakespeare";
+        if ($('#no_auth').prop("checked") == true) _ti="Hamlet";
         var _llt = "<table><tr><th>Barcode</th><th>Title</th><th>Loan Date</th><th>Due Date</th><th>Call Number</th></tr>";
-        _llt += "<tr><td>N1234</td><td>Hamlet / William Shakespeare</td><td>"+loan_date+"</td><td>"+due_date+"</td><td>822.33 HAM</td></tr></table>";
+        _llt += "<tr><td>N1234</td><td>"+_ti+"</td><td>"+loan_date+"</td><td>"+due_date+"</td><td>822.33 HAM</td></tr></table>";
                         
         var _hsl = reorder_slip(p_obj['%institution_logo_url%'], p_obj['%institution_name%'], _lb, p_obj['%slip_title%'], _un, _ud, _llt, _ds, p_obj['%signature%']);
        
@@ -230,7 +235,7 @@
     <div class="column">
      <h1>Alma print slip Bookmarklet generator</h1>
     <fieldset><legend><strong>General</strong></legend>
-        <p><label>Bookmarklet name: </label><input type="text" id="bk_name" required> <label>Print immediately </label><input type="checkbox" id="print_now"></p>
+        <p><label>Bookmarklet name: </label><input type="text" id="bk_name" required> | <label>Print immediately </label><input type="checkbox" id="print_now"> | <label>Do not display author/s </label><input type="checkbox" id="no_author"></p>
         <p><label>Slip popup (in px): </label><label>Width: </label><input type="text" id="popup_width" size=10> <label>Height:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label><input type="text" id="popup_height" size=10>
         <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>Position top: </label><input type="text" id="popup_x" size=10> <label>Position left: </label><input type="text" id="popup_y" size=10><br />Note: in Chrome the position is fixed.</p>
         
@@ -315,7 +320,8 @@
                 } else {
                     var _ltx = _lc.item(j).innerText;
                     }
-                if (_ltx.length > 0) {
+                if (_ltx.length > 0) {                    
+                    %no_auth%                                        
                     _ll += "|" + _ltx + "|";
                 }                    
                 }
