@@ -38,11 +38,11 @@
             p_obj["%popup_width%"] = 500;
             p_obj["%popup_height%"] = 600;
             p_obj["%print_now%'"] = "_sp.print(); _sp.close();";
-            p_obj["%slip_title%"]= "Loan receipt";
-            p_obj["%institution_name%"]= "[MyInstitution]";
-            p_obj["%institution_logo_url%"]= "https://knowledge.exlibrisgroup.com/@api/deki/files/55131/Alma_horizontal.jpg?revision=1";
+            p_obj["%slip_title%"]= "Ricevuta di Prestito";
+            p_obj["%institution_name%"]= "Università di Pisa";
+            p_obj["%institution_logo_url%"]= "https://sbart-unipi.alma.exlibrisgroup.com/infra/branding/logo/logo-email.png?institution=3298&amp;version=1569479069537?version=September2019";
             p_obj["%body_css%"]= "font-family: Arial, Helvetica, sans-serif;";
-            p_obj["%table_css%"]= "border:1px solid black; border-collapse: collapse;";
+            p_obj["%table_css%"]= "border:1px solid black; border-collapse: collapse; font-size: small;";
             p_obj["%institution_logo_css%"]= "width:100px;";
             p_obj["%institution_css%"]= "font-size: medium;";
             p_obj["%library_css%"]= "font-size: medium;";
@@ -50,13 +50,12 @@
             p_obj["%user_css%"]= "font-size: small; font-weight:bold;";
             p_obj["%loans_css%"]= "padding-top: 20px;";
             p_obj["%signature_css%"]= "padding-top:50px;";
-            p_obj["%date_format%"]= "en-US";
-            p_obj["%signature%"]= "Signature ______________________";
-            p_obj["%date_text%"]= "Date";
+            p_obj["%date_format%"]= "it-IT";
+            p_obj["%signature%"]= "<br /><br />Firma ________________ <br />";
+            p_obj["%date_text%"]= "Data";
             p_obj["%print_now%"]= "_sp.print(); _sp.close();";
-            p_obj["%no_auth%"] = "var _noa = false;";
-            p_obj["%two_columns%"] = "var _twc = false;";
-            p_obj["%sortable_translation%"] = "";
+            p_obj["%no_auth%"] = "var _noa = true;";
+            p_obj["%two_columns%"] = "var _twc = true;";
             // end of default values
                 } else {
                 $('#cookie').css("display", "inline");
@@ -83,7 +82,6 @@
             $('#date_format').val(p_obj["%date_format%"]);
             $('#signature').val(p_obj["%signature%"]);
             $('#date_text').val(p_obj["%date_text%"]);
-            $('#sortable_translation').val(p_obj["%sortable_translation%"]);
             if (p_obj["%print_now%"] == "_sp.print(); _sp.close();") $('#print_now').prop('checked', true);
             if (p_obj["%no_auth%"] == "var _noa = true;") $('#no_auth').prop('checked', true);
             if (p_obj["%two_columns%"] == "var _twc = true;") $('#two_columns').prop('checked', true);
@@ -147,7 +145,6 @@
             p_obj["%date_format%"]= $('#date_format').val();
             p_obj["%signature%"]= $('#signature').val();
             p_obj["%date_text%"]= $('#date_text').val();
-            p_obj["%sortable_translation%"] = $('#sortable_translation').val();
             p_obj["%html_slip%"]=reorder_slip(p_obj['%institution_logo_url%'], p_obj['%institution_name%'], '', p_obj['%slip_title%'], '', '', '', p_obj['%date_text%'], p_obj['%signature%']);
             p_obj["%list_order%"]=$('#sortable').html();
             p_obj["%print_now%"]=" ";
@@ -243,11 +240,9 @@
     <div class="column">
      <h1>Alma print slip Bookmarklet generator</h1>
     <fieldset><legend><strong>General</strong></legend>
-        <p><label>Bookmarklet name: </label><input type="text" id="bk_name" required> | <label>Print immediately </label><input type="checkbox" id="print_now"> | <label>Do not display author/s </label><input type="checkbox" id="no_auth"></p> 
+        <p><label>Bookmarklet name: </label><input type="text" id="bk_name" required> | <label>Print immediately </label><input type="checkbox" id="print_now"> | <label>Do not display author/s </label><input type="checkbox" id="no_auth"></p>
         <p><label>Slip popup (in px): </label><label>Width: </label><input type="text" id="popup_width" size=10> <label>Height:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label><input type="text" id="popup_height" size=10> | <label>Two columns table </label><input type="checkbox" id="two_columns">
-        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>Position top: </label><input type="text" id="popup_x" size=10> <label>Position left: </label><input type="text" id="popup_y" size=10></p>
-        <p><label>Sortable translation </label><input type="text" id="sortable_translation" placeholder="sortable" size=10>
-        <br />Note: in Chrome the position is fixed.</p>
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>Position top: </label><input type="text" id="popup_x" size=10> <label>Position left: </label><input type="text" id="popup_y" size=10><br />Note: in Chrome the position is fixed.</p>
         
         </fieldset>
          <p>&nbsp;</p>
@@ -326,7 +321,7 @@
         var header_el = document.querySelectorAll('th[id^="SELENIUM_ID_loanList_HEADER"]');
         for(i=0; i<header_el.length; i++) {
             h = header_el[i].innerText;
-            if (!h || h=="sortable" || h=="%sortable_translation%" ) h=header_el[i].querySelector('input[id^="sortHeader-checkout.patron.workspace"]').value;  
+            if (!h || h=="sortable" || h=="ordinabile" ) h=header_el[i].querySelector('input[id^="sortHeader-checkout.patron.workspace"]').value;  
             header_ray.push(h);
             }
         loan_rows = document.querySelectorAll('tr[id^="recordContainerloanList"]');
