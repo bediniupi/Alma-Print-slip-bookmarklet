@@ -9,7 +9,7 @@ Create a bookmarklet that you can save in your browser bookmark toolbar: when yo
 ## Installation
 Generate the bookmarklet here: 
 
-Alma Print Slip Bookmarklet Generator
+[Alma Print Slip Bookmarklet Generator](https://bediniupi.github.io/Alma-Print-slip-bookmarklet/aps_configure_bookmarklet.html)
 
 Drag and drop it in your browser bookmark toolbar (or other bookmark menu if you prefer).
 
