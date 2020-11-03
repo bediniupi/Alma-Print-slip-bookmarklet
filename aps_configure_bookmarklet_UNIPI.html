@@ -322,7 +322,7 @@
         var header_el = document.querySelectorAll('th[id^="SELENIUM_ID_loanList_HEADER"]');
         for(i=0; i<header_el.length; i++) {
             h = header_el[i].innerText;
-            if (!h || h=="sortable" || h=="ordinabile" ) h=header_el[i].querySelector('input[id^="sortHeader-checkout.patron.workspace"]').value;  
+            if (!h || h=="sortable" || h=="ordinabile" || h=="in ordine discendente" || h=="in ordine ascendente") h=header_el[i].querySelector('input[id^="sortHeader-checkout.patron.workspace"]').value;  
             header_ray.push(h);
             }
         loan_rows = document.querySelectorAll('tr[id^="recordContainerloanList"]');
