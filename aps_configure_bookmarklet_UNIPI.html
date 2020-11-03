@@ -307,8 +307,9 @@
         var _td = d.toLocaleDateString(_df);
         var _ds = "%date_text% "+_td;
         var _un = document.getElementById("pageBeanfullPatronName").innerHTML;    
-        var _ud = document.getElementById("pageBeanuserIDisplay").value;    
-        var _lb = document.getElementById("locationText").innerHTML;    
+        var _ud = document.getElementById("pageBeanuserIDisplay").value;
+        var _lbr = document.querySelectorAll('[_ngcontent-pgi-c447=""]');
+        var _lb = _lbr[1].innerHTML;    
         var _rl = _lt.rows.length;
         %no_auth%
         %two_columns%
